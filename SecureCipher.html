@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecureCipher - Caesar &amp; Basic Encryption Tool</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&amp;family=Inter:wght@400;600&amp;display=swap');
+        
+        :root {
+            --primary: #00ff9d;
+            --bg: #0a0a0a;
+            --card: #121212;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            background: linear-gradient(90deg, #00ff9d, #00b86e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+        
+        .subtitle {
+            color: #888;
+            font-family: 'Roboto Mono', monospace;
+        }
+        
+        .tabs {
+            display: flex;
+            background: #1a1a1a;
+            border-radius: 12px;
+            padding: 6px;
+            margin-bottom: 25px;
+            width: fit-content;
+        }
+        
+        .tab {
+            padding: 12px 28px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .tab.active {
+            background: var(--primary);
+            color: black;
+        }
+        
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 25px;
+        }
+        
+        .card {
+            background: var(--card);
+            border-radius: 16px;
+            padding: 28px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            border: 1px solid #222;
+        }
+        
+        textarea {
+            width: 100%;
+            height: 180px;
+            background: #1e1e1e;
+            border: 1px solid #333;
+            border-radius: 10px;
+            padding: 16px;
+            color: #fff;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 1.05rem;
+            resize: vertical;
+            margin-bottom: 15px;
+        }
+        
+        .input-group {
+            margin-bottom: 18px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 6px;
+            color: #aaa;
+            font-size: 0.95rem;
+        }
+        
+        input[type="number"], select {
+            width: 100%;
+            padding: 12px;
+            background: #1e1e1e;
+            border: 1px solid #333;
+            border-radius: 10px;
+            color: white;
+            font-size: 1rem;
+        }
+        
+        .btn {
+            padding: 14px 32px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1.02rem;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: black;
+        }
+        
+        .btn-secondary {
+            background: #333;
+            color: white;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 255, 157, 0.3);
+        }
+        
+        .output {
+            background: #1e1e1e;
+            border-radius: 10px;
+            padding: 18px;
+            min-height: 140px;
+            font-family: 'Roboto Mono', monospace;
+            white-space: pre-wrap;
+            border: 1px solid #00ff9d33;
+        }
+        
+        .history {
+            max-height: 420px;
+            overflow-y: auto;
+        }
+        
+        .history-item {
+            background: #1e1e1e;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            border-left: 4px solid #00ff9d;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #555;
+            font-size: 0.9rem;
+        }
+        
+        .stats {
+            display: flex;
+            gap: 20px;
+            margin-top: 15px;
+        }
+        
+        .stat {
+            flex: 1;
+            text-align: center;
+            padding: 12px;
+            background: #1e1e1e;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>SecureCipher</h1>
+            <p class="subtitle">Caesar Cipher &amp; Advanced Basic Encryption Suite</p>
+            <p style="color:#00ff9d; font-family:'Roboto Mono'; margin-top:8px;">INSA Internship Project • Professional Edition</p>
+        </header>
+
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab(0)">Caesar Cipher</div>
+            <div class="tab" onclick="switchTab(1)">Vigenère Cipher</div>
+            <div class="tab" onclick="switchTab(2)">Tools</div>
+        </div>
+
+        <!-- Caesar Tab -->
+        <div id="tab0" class="main-grid">
+            <div>
+                <div class="card">
+                    <h2 style="margin-bottom:20px; color:#00ff9d;">🔐 Caesar Cipher</h2>
+                    
+                    <div class="input-group">
+                        <label>Input Text</label>
+                        <textarea id="caesar-input" placeholder="Enter text to encrypt/decrypt..."></textarea>
+                    </div>
+                    
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
+                        <div class="input-group">
+                            <label>Shift (1-25)</label>
+                            <input type="number" id="caesar-shift" value="3" min="1" max="25">
+                        </div>
+                        <div class="input-group">
+                            <label>Operation</label>
+                            <select id="caesar-mode">
+                                <option value="encrypt">Encrypt</option>
+                                <option value="decrypt">Decrypt</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div style="margin:20px 0;">
+                        <button class="btn btn-primary" style="width:100%;" onclick="caesarProcess()">Process Text</button>
+                    </div>
+                    
+                    <label>Result</label>
+                    <div id="caesar-result" class="output">Result will appear here...</div>
+                    
+                    <div style="margin-top:15px; display:flex; gap:10px;">
+                        <button class="btn btn-secondary" onclick="copyToClipboard('caesar-result')">Copy</button>
+                        <button class="btn btn-secondary" onclick="clearAll('caesar')">Clear</button>
+                        <button class="btn btn-secondary" onclick="bruteForceCaesar()">Brute Force Attack</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Sidebar -->
+            <div>
+                <div class="card">
+                    <h3 style="margin-bottom:15px;">📊 Quick Stats</h3>
+                    <div class="stats">
+                        <div class="stat">
+                            <div style="font-size:1.8rem; color:#00ff9d;">26</div>
+                            <div style="font-size:0.8rem; color:#888;">Possible Shifts</div>
+                        </div>
+                        <div class="stat">
+                            <div style="font-size:1.8rem; color:#00ff9d;" id="caesar-time">0ms</div>
+                            <div style="font-size:0.8rem; color:#888;">Last Exec Time</div>
+                        </div>
+                    </div>
+                    
+                    <h3 style="margin:25px 0 15px;">📜 History</h3>
+                    <div id="caesar-history" class="history"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Vigenère Tab (Hidden by default) -->
+        <div id="tab1" class="main-grid" style="display:none;">
+            <div>
+                <div class="card">
+                    <h2 style="margin-bottom:20px; color:#00ff9d;">🔑 Vigenère Cipher</h2>
+                    
+                    <div class="input-group">
+                        <label>Input Text</label>
+                        <textarea id="vigenere-input" placeholder="Enter text..."></textarea>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Key (letters only)</label>
+                        <input type="text" id="vigenere-key" value="KEY" style="width:100%;">
+                    </div>
+                    
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-top:15px;">
+                        <button class="btn btn-primary" onclick="vigenereProcess('encrypt')">Encrypt</button>
+                        <button class="btn btn-primary" onclick="vigenereProcess('decrypt')">Decrypt</button>
+                    </div>
+                    
+                    <label style="margin-top:20px;">Result</label>
+                    <div id="vigenere-result" class="output"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tools Tab -->
+        <div id="tab2" class="main-grid" style="display:none;">
+            <div class="card">
+                <h2>🛠️ Additional Tools</h2>
+                <p style="margin:15px 0; color:#aaa;">Coming with advanced version</p>
+                <ul style="line-height:2.2; padding-left:20px;">
+                    <li>ROT13 (One-click)</li>
+                    <li>Atbash Cipher</li>
+                    <li>Simple XOR Encryption</li>
+                    <li>Frequency Analysis</li>
+                    <li>File Encryption (.txt support)</li>
+                    <li>Password Generator</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        SecureCipher v2.1 • Built for INSA Internship • Educational &amp; Demonstration Purposes
+    </div>
+
+    <script>
+        let currentTab = 0;
+        
+        function switchTab(tab) {
+            document.querySelectorAll('.tab').forEach((t, i) => {
+                t.classList.toggle('active', i === tab);
+            });
+            document.getElementById('tab0').style.display = tab === 0 ? 'grid' : 'none';
+            document.getElementById('tab1').style.display = tab === 1 ? 'grid' : 'none';
+            document.getElementById('tab2').style.display = tab === 2 ? 'grid' : 'none';
+            currentTab = tab;
+        }
+        
+        // Caesar Functions
+        function caesarCipher(text, shift, mode) {
+            const startTime = performance.now();
+            shift = parseInt(shift);
+            
+            if (mode === 'decrypt') shift = (26 - shift) % 26;
+            
+            let result = '';
+            for (let char of text) {
+                if (char.match(/[a-z]/i)) {
+                    const code = char.charCodeAt(0);
+                    const isUpper = char === char.toUpperCase();
+                    const base = isUpper ? 65 : 97;
+                    result += String.fromCharCode(((code - base + shift) % 26) + base);
+                } else {
+                    result += char;
+                }
+            }
+            
+            const execTime = (performance.now() - startTime).toFixed(2);
+            document.getElementById('caesar-time').textContent = execTime + 'ms';
+            
+            return result;
+        }
+        
+        function caesarProcess() {
+            const input = document.getElementById('caesar-input').value.trim();
+            if (!input) {
+                alert("Please enter some text!");
+                return;
+            }
+            
+            const shift = document.getElementById('caesar-shift').value;
+            const mode = document.getElementById('caesar-mode').value;
+            
+            const result = caesarCipher(input, shift, mode);
+            document.getElementById('caesar-result').textContent = result;
+            
+            addToHistory('Caesar', input.substring(0, 40) + (input.length > 40 ? '...' : ''), result.substring(0, 40) + '...', shift);
+        }
+        
+        function bruteForceCaesar() {
+            const input = document.getElementById('caesar-input').value.trim();
+            if (!input) return alert("Enter text first");
+            
+            let outputHTML = "<strong>Brute Force Results (Shift 1-25):</strong><br><br>";
+            
+            for (let i = 1; i <= 25; i++) {
+                const decrypted = caesarCipher(input, i, 'decrypt');
+                outputHTML += `<strong>Shift ${i}:</strong> ${decrypted}<br>`;
+            }
+            
+            document.getElementById('caesar-result').innerHTML = outputHTML;
+        }
+        
+        // Vigenère
+        function vigenereProcess(mode) {
+            const text = document.getElementById('vigenere-input').value.trim();
+            let key = document.getElementById('vigenere-key').value.trim().toUpperCase();
+            
+            if (!text || !key) return alert("Text and Key are required");
+            
+            key = key.replace(/[^A-Z]/g, '');
+            if (!key) return alert("Key must contain letters");
+            
+            let result = '';
+            let keyIndex = 0;
+            
+            for (let char of text) {
+                if (char.match(/[a-z]/i)) {
+                    const isUpper = char === char.toUpperCase();
+                    const base = isUpper ? 65 : 97;
+                    const textCode = char.charCodeAt(0) - base;
+                    const keyCode = key[keyIndex % key.length].charCodeAt(0) - 65;
+                    
+                    let newCode;
+                    if (mode === 'encrypt') {
+                        newCode = (textCode + keyCode) % 26;
+                    } else {
+                        newCode = (textCode - keyCode + 26) % 26;
+                    }
+                    
+                    result += String.fromCharCode(newCode + base);
+                    keyIndex++;
+                } else {
+                    result += char;
+                }
+            }
+            
+            document.getElementById('vigenere-result').textContent = result;
+        }
+        
+        function addToHistory(cipher, input, output, param) {
+            const historyDiv = document.getElementById('caesar-history');
+            const entry = document.createElement('div');
+            entry.className = 'history-item';
+            entry.innerHTML = `
+                <strong>${cipher}</strong> (Shift: ${param})<br>
+                <small style="color:#888;">${input}</small><br>
+                → ${output}
+            `;
+            historyDiv.prepend(entry);
+            
+            // Keep only 8 entries
+            if (historyDiv.children.length > 8) {
+                historyDiv.removeChild(historyDiv.lastChild);
+            }
+        }
+        
+        function copyToClipboard(elementId) {
+            const text = document.getElementById(elementId).textContent || document.getElementById(elementId).innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                const orig = event.target.textContent;
+                event.target.textContent = "Copied!";
+                setTimeout(() => event.target.textContent = orig, 1500);
+            });
+        }
+        
+        function clearAll(prefix) {
+            if (prefix === 'caesar') {
+                document.getElementById('caesar-input').value = '';
+                document.getElementById('caesar-result').textContent = 'Result will appear here...';
+            }
+        }
+        
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 'Enter') {
+                if (currentTab === 0) caesarProcess();
+            }
+        });
+        
+        // Demo content
+        window.onload = function() {
+            document.getElementById('caesar-input').value = "Hello World! This is a demonstration for INSA internship.";
+        };
+    </script>
+</body>
+</html>
